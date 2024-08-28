@@ -1,35 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React, { useState } from "react";
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const TodoList = () => {
+  const [todos, setTodos] = useState ([]);
+  const [newTodo, setNewTodo] = useState ("");
+
+  const handleAddTodo = () => {
+    if (newTodo.trim() !== ""){
+      setTodos([...todos, {text: newTodo.trim(), checked: false}]);
+      setNewTodo("");
+    }
+  };
+
+  const handleDeleteTodo = (index) => {
+    const newTodos = [...todos];
+    newTodos.splice(index,1);
+    setTodos(newTodos);
+
+  };
+  const handleToggleTodo = (index) => {
+    const newTodos = [...todos];
+    newTodos[index].checked = !newTodos[index].checked;
+    setTodos(newTodos);
+  };
+
+
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      <h1>Todo List APP</h1>
+      <input type="text" placeholder= " text" value = {newTodo} onChange = {(e) => setNewTodo(e.target.value)}/>
+      <button onClick = {handleAddTodo}>Ajouter</button>
+      <ul>
+        {todos.map((todo, index) => (
+          <li key = {index} >
+            <div style = {{ display: "flex", alignItems: "center"}}>
+            <input id="bnt"
+            type ="checkbox" 
+            checked = {todo.checked} 
+            onChange = {() => handleToggleTodo(index)}
+            />
+            <span 
+              style={{
+                marginRight: "10px",
+                textDecoration: todo.checked ? "line-through" : "none",
+              }}
+            >
+              {todo.text}
+            </span>
+            <button  style = {{marginTop: "5px", marginBottom: "5px"}}  onClick = {() => handleDeleteTodo(index)}>Supprimer</button>
 
-export default App
+            </div>
+            
+          </li>
+          
+        ))}
+      </ul>
+    </div>
+    </>
+  );
+};
+
+export default TodoList;
